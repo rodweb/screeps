@@ -60,14 +60,24 @@ function harvester(creep: Creep): void {
   actions.harvest(creep, findClosestSource);
 }
 
+function worker(creep: Creep): void {
+  if (hasEnergy(creep)) {
+    actions.upgrade(creep, () => creep.room.controller || null);
+  } else {
+    actions.pickup(creep, findClosestEnergyResource);
+  }
+}
+
 const roles: Record<Roles, (creep: Creep) => void> = {
   pioneer,
   harvester,
+  worker,
 };
 
 export enum Roles {
   pioneer = 'pioneer',
   harvester = 'harvester',
+  worker = 'worker',
 }
 
 export default roles;

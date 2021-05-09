@@ -31,11 +31,24 @@ function transfer(
 function pickup(
   creep: Creep,
   getTarget: (creep: Creep) => Resource | null,
-): CreepActionReturnCode | -8 | void {
+): number | void {
   const target = getTarget(creep);
   if (!target) return ERR_INVALID_TARGET;
   if (creep.pos.isNearTo(target)) {
     return creep.pickup(target);
+  } else {
+    moveNear(creep, target.pos);
+  }
+}
+
+function upgrade(
+  creep: Creep,
+  getTarget: (creep: Creep) => StructureController | null,
+): number | void {
+  const target = getTarget(creep);
+  if (!target) return ERR_INVALID_TARGET;
+  if (creep.pos.inRangeTo(target, 3)) {
+    return creep.upgradeController(target);
   } else {
     moveNear(creep, target.pos);
   }
@@ -46,6 +59,7 @@ const actions = {
   harvest,
   transfer,
   pickup,
+  upgrade,
 };
 
 export default actions;

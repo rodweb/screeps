@@ -12,6 +12,7 @@ declare global {
 const bodyTypes: Record<Roles, BodyPartConstant[]> = {
   pioneer: [MOVE, MOVE, CARRY, CARRY, WORK],
   harvester: [WORK, WORK, MOVE, CARRY],
+  worker: [MOVE, MOVE, CARRY, CARRY, WORK],
 };
 
 function getCreepName(role: Roles): string {
@@ -50,6 +51,9 @@ function spawnCreepsFor(room: Room): void {
   }
   if (getRoleCount(Roles.harvester) < 2) {
     return spawnRole(room, Roles.harvester);
+  }
+  if (getRoleCount(Roles.worker) < 1) {
+    return spawnRole(room, Roles.worker);
   }
 }
 
