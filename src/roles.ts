@@ -31,6 +31,13 @@ function findClosestSource(creep: Creep): Source | null {
     filter: (s) => s.energy > 0,
   });
 }
+
+function findClosestEnergyResource(creep: Creep): Resource | null {
+  return creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
+    filter: (s) => s.resourceType === RESOURCE_ENERGY && s.amount > 50,
+  });
+}
+
 function pioneer(creep: Creep): void {
   if (isWorking(creep)) {
     if (hasEnergy(creep)) {
@@ -42,6 +49,8 @@ function pioneer(creep: Creep): void {
     if (isFull(creep)) {
       startWorking(creep);
     } else {
+      let result = actions.pickup(creep, findClosestEnergyResource);
+      if (result === OK) return;
       actions.harvest(creep, findClosestSource);
     }
   }
@@ -51,9 +60,14 @@ function harvester(creep: Creep): void {
   actions.harvest(creep, findClosestSource);
 }
 
-const roles: { [role: string]: (creep: Creep) => void } = {
+const roles: Record<Roles, (creep: Creep) => void> = {
   pioneer,
   harvester,
 };
+
+export enum Roles {
+  pioneer = 'pioneer',
+  harvester = 'harvester',
+}
 
 export default roles;

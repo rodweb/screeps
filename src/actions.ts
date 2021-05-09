@@ -28,10 +28,24 @@ function transfer(
   }
 }
 
+function pickup(
+  creep: Creep,
+  getTarget: (creep: Creep) => Resource | null,
+): CreepActionReturnCode | -8 | void {
+  const target = getTarget(creep);
+  if (!target) return ERR_INVALID_TARGET;
+  if (creep.pos.isNearTo(target)) {
+    return creep.pickup(target);
+  } else {
+    moveNear(creep, target.pos);
+  }
+}
+
 const actions = {
   moveNear,
   harvest,
   transfer,
+  pickup,
 };
 
 export default actions;

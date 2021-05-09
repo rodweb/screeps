@@ -1,6 +1,6 @@
 import ErrorMapper from 'libs/error-mapper';
 import game from './game';
-import roles from './roles';
+import roles, { Roles } from './roles';
 
 declare global {
   interface CreepMemory {
@@ -9,20 +9,26 @@ declare global {
   }
 }
 
-enum Roles {
-  pioneer = 'pioneer',
-  harvester = 'harvester',
-}
-
 const bodyTypes: Record<Roles, BodyPartConstant[]> = {
   pioneer: [MOVE, MOVE, CARRY, CARRY, WORK],
   harvester: [WORK, WORK, MOVE, CARRY],
 };
 
+function getCreepName(role: Roles): string {
+  let i = 1;
+  let name;
+  do {
+    name = `${role}:${i++}`;
+  } while (game.creepExists(name));
+  return name;
+}
+
 function spawnRole(room: Room, role: Roles) {
   const spawns = room.find(FIND_MY_SPAWNS);
   for (const spawn of spawns) {
-    const result = spawn.spawnCreep(bodyTypes[role], role, {
+    const creepName = getCreepName(role);
+    const body = bodyTypes[role];
+    const result = spawn.spawnCreep(body, creepName, {
       memory: {
         role,
         working: false,
@@ -33,18 +39,17 @@ function spawnRole(room: Room, role: Roles) {
 }
 
 function spawnCreepsFor(room: Room): void {
-  const creepCount = room.find(FIND_MY_CREEPS).length;
-  if (creepCount === 0) {
-    return spawnRole(room, Roles.pioneer);
-  }
   // @ts-ignore
   const creepsByRole = _.groupBy(
     game.getMyCreeps(room),
     (creep) => creep.memory.role,
   );
   const getRoleCount = (role: Roles) => (creepsByRole[role] || []).length;
+  if (getRoleCount(Roles.pioneer) < 1) {
+    return spawnRole(room, Roles.pioneer);
+  }
   if (getRoleCount(Roles.harvester) < 2) {
-    spawnRole(room, Roles.harvester);
+    return spawnRole(room, Roles.harvester);
   }
 }
 
@@ -55,7 +60,7 @@ function unwrappedLoop() {
     spawnCreepsFor(room);
 
     for (const creep of game.getMyCreeps(room)) {
-      roles[creep.name](creep);
+      roles[creep.memory.role as Roles](creep);
     }
   }
 }

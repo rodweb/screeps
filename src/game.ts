@@ -14,10 +14,14 @@ function getMyCreeps(room: Room): Creep[] {
   return room.find(FIND_MY_CREEPS);
 }
 
+function creepExists(creepName: string): boolean {
+  return Boolean(Game.creeps[creepName]);
+}
+
 const game = {
-  getRooms,
   getMyRooms,
   getMyCreeps,
+  creepExists,
 };
 
 export default game;
