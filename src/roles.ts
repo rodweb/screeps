@@ -47,8 +47,13 @@ function pioneer(creep: Creep): void {
   }
 }
 
+function harvester(creep: Creep): void {
+  actions.harvest(creep, findClosestSource);
+}
+
 const roles: { [role: string]: (creep: Creep) => void } = {
   pioneer,
+  harvester,
 };
 
 export default roles;

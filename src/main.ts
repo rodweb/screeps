@@ -9,15 +9,20 @@ declare global {
   }
 }
 
-const bodyTypes = {
+enum Roles {
+  pioneer = 'pioneer',
+  harvester = 'harvester',
+}
+
+const bodyTypes: Record<Roles, BodyPartConstant[]> = {
   pioneer: [MOVE, MOVE, CARRY, CARRY, WORK],
+  harvester: [WORK, WORK, MOVE, CARRY],
 };
 
-function spawnPioneerFor(room: Room) {
-  const role = 'pioneer';
+function spawnRole(room: Room, role: Roles) {
   const spawns = room.find(FIND_MY_SPAWNS);
   for (const spawn of spawns) {
-    const result = spawn.spawnCreep(bodyTypes.pioneer, role, {
+    const result = spawn.spawnCreep(bodyTypes[role], role, {
       memory: {
         role,
         working: false,
@@ -30,7 +35,16 @@ function spawnPioneerFor(room: Room) {
 function spawnCreepsFor(room: Room): void {
   const creepCount = room.find(FIND_MY_CREEPS).length;
   if (creepCount === 0) {
-    return spawnPioneerFor(room);
+    return spawnRole(room, Roles.pioneer);
+  }
+  // @ts-ignore
+  const creepsByRole = _.groupBy(
+    game.getMyCreeps(room),
+    (creep) => creep.memory.role,
+  );
+  const getRoleCount = (role: Roles) => (creepsByRole[role] || []).length;
+  if (getRoleCount(Roles.harvester) < 2) {
+    spawnRole(room, Roles.harvester);
   }
 }
 
