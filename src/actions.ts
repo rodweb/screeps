@@ -54,12 +54,26 @@ function upgrade(
   }
 }
 
+function build(
+  creep: Creep,
+  getTarget: (creep: Creep) => ConstructionSite | null,
+): number | void {
+  const target = getTarget(creep);
+  if (!target) return ERR_INVALID_TARGET;
+  if (creep.pos.inRangeTo(target, 3)) {
+    return creep.build(target);
+  } else {
+    moveNear(creep, target.pos);
+  }
+}
+
 const actions = {
   moveNear,
   harvest,
   transfer,
   pickup,
   upgrade,
+  build,
 };
 
 export default actions;

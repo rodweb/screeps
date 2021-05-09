@@ -38,6 +38,10 @@ function findClosestEnergyResource(creep: Creep): Resource | null {
   });
 }
 
+function findClosestConstructionSite(creep: Creep): ConstructionSite | null {
+  return creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
+}
+
 function pioneer(creep: Creep): void {
   if (isWorking(creep)) {
     if (hasEnergy(creep)) {
@@ -62,6 +66,8 @@ function harvester(creep: Creep): void {
 
 function worker(creep: Creep): void {
   if (hasEnergy(creep)) {
+    let result = actions.build(creep, findClosestConstructionSite);
+    if (result === OK) return;
     actions.upgrade(creep, () => creep.room.controller || null);
   } else {
     actions.pickup(creep, findClosestEnergyResource);

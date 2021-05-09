@@ -52,7 +52,7 @@ function spawnCreepsFor(room: Room): void {
   if (getRoleCount(Roles.harvester) < 2) {
     return spawnRole(room, Roles.harvester);
   }
-  if (getRoleCount(Roles.worker) < 1) {
+  if (getRoleCount(Roles.worker) < 5) {
     return spawnRole(room, Roles.worker);
   }
 }
