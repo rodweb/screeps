@@ -1,5 +1,3 @@
-const sacrificer = (creep: Creep) => {
+export default function sacrificer(creep: Creep) {
   creep.suicide();
-};
-
-export default sacrificer;
+}

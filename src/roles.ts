@@ -1,5 +1,6 @@
 import actions from './actions';
 import sacrificer from './roles/sacrificer';
+import upgrader from './roles/upgrader';
 
 function hasEnergy(creep: Creep): boolean {
   return creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
@@ -80,6 +81,7 @@ const roles: Record<Roles, (creep: Creep) => void> = {
   harvester,
   worker,
   sacrificer,
+  upgrader,
 };
 
 export enum Roles {
@@ -87,6 +89,7 @@ export enum Roles {
   harvester = 'harvester',
   worker = 'worker',
   sacrificer = 'sacrificer',
+  upgrader = 'upgrader',
 }
 
 export default roles;
