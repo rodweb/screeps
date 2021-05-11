@@ -14,6 +14,7 @@ const bodyTypes: Record<Roles, BodyPartConstant[]> = {
   pioneer: [MOVE, MOVE, CARRY, CARRY, WORK],
   harvester: [WORK, WORK, MOVE, CARRY],
   worker: [MOVE, MOVE, CARRY, CARRY, WORK],
+  sacrificer: [MOVE],
 };
 
 function getCreepName(role: Roles): string {
@@ -55,6 +56,9 @@ function spawnCreepsFor(room: Room): void {
   }
   if (getRoleCount(Roles.worker) < 5) {
     return spawnRole(room, Roles.worker);
+  }
+  if (getRoleCount(Roles.sacrificer) < 1) {
+    return spawnRole(room, Roles.sacrificer);
   }
 }
 
