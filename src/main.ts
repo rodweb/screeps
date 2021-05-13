@@ -69,6 +69,10 @@ function spawnCreepsFor(room: Room): void {
 function unwrappedLoop() {
   console.log(`Current game tick is ${Game.time}`);
 
+  if (Game.cpu.bucket == 10000) {
+    Game.cpu?.generatePixel();
+  }
+
   for (const room of game.getMyRooms()) {
     spawnCreepsFor(room);
 
