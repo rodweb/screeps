@@ -17,7 +17,7 @@ function harvest(
 
 function transfer(
   creep: Creep,
-  getTarget: (creep: Creep) => StructureSpawn | null,
+  getTarget: (creep: Creep) => AnyCreep | Structure<StructureConstant> | null,
 ): void {
   const target = getTarget(creep);
   if (!target) return;

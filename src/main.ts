@@ -1,5 +1,6 @@
 import ErrorMapper from './libs/error-mapper';
-import './libs/room-visual';
+import './libs';
+import './prototypes';
 import game from './game';
 import roles, { Roles } from './roles';
 

@@ -43,3 +43,9 @@ export function findClosestConstructionSite(
 ): ConstructionSite | null {
   return creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
 }
+
+export function findNearExtensions(creep: Creep): StructureExtension[] {
+  return creep.pos.findInRange<StructureExtension>(FIND_MY_STRUCTURES, 1, {
+    filter: (s) => s.structureType === STRUCTURE_EXTENSION,
+  });
+}
