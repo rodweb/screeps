@@ -18,10 +18,20 @@ function creepExists(creepName: string): boolean {
   return Boolean(Game.creeps[creepName]);
 }
 
+function getObjectById<T>(id: Id<T> | string): T | null {
+  return Game.getObjectById(id as Id<T>);
+}
+
+function getCreepByName(creepName: string): Creep | null {
+  return Game.creeps[creepName] || null;
+}
+
 const game = {
   getMyRooms,
   getMyCreeps,
   creepExists,
+  getObjectById,
+  getCreepByName,
 };
 
 export default game;
