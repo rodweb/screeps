@@ -26,12 +26,17 @@ function getCreepByName(creepName: string): Creep | null {
   return Game.creeps[creepName] || null;
 }
 
+function getRoomByName(roomName: string): Room | null {
+  return Game.rooms[roomName] || null;
+}
+
 const game = {
   getMyRooms,
   getMyCreeps,
   creepExists,
   getObjectById,
   getCreepByName,
+  getRoomByName,
 };
 
 export default game;

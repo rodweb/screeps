@@ -3,6 +3,7 @@ import './libs';
 import './prototypes';
 import game from './game';
 import roles, { Roles } from './roles';
+import Transfer from './tasks/transfer';
 
 declare global {
   interface CreepMemory {
@@ -67,6 +68,37 @@ function spawnCreepsFor(room: Room): void {
   }
 }
 
+class Colony {
+  readonly roomName: string;
+
+  constructor(room: Room) {
+    this.roomName = room.name;
+  }
+
+  get room() {
+    return game.getRoomByName(this.roomName)!;
+  }
+
+  tick() {
+    spawnCreepsFor(this.room);
+    this.runCreeps();
+  }
+
+  private runCreeps() {
+    for (const creep of game.getMyCreeps(this.room)) {
+      roles[creep.memory.role as Roles](creep);
+    }
+  }
+}
+
+const colonyByRoomName = new Map<string, Colony>();
+
+function getColony(room: Room) {
+  const colony = colonyByRoomName.get(room.name) || new Colony(room);
+  colonyByRoomName.set(room.name, colony);
+  return colony;
+}
+
 function generatePixels() {
   if (Game.cpu.bucket == 10000) {
     const result = Game.cpu?.generatePixel();
@@ -88,11 +120,7 @@ function unwrappedLoop() {
   if (generatePixels()) return;
 
   for (const room of game.getMyRooms()) {
-    spawnCreepsFor(room);
-
-    for (const creep of game.getMyCreeps(room)) {
-      roles[creep.memory.role as Roles](creep);
-    }
+    getColony(room).tick();
   }
 }
 
