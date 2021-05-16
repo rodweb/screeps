@@ -67,12 +67,25 @@ function spawnCreepsFor(room: Room): void {
   }
 }
 
+function generatePixels() {
+  if (Game.cpu.bucket == 10000) {
+    const result = Game.cpu?.generatePixel();
+    if (result === OK) return true;
+  }
+  return false;
+}
+
+function clearMemory() {
+  for (const creepName in Memory.creeps) {
+    if (!Game.creeps[creepName]) delete Memory.creeps[creepName];
+  }
+}
+
 function unwrappedLoop() {
   console.log(`Current game tick is ${Game.time}`);
 
-  if (Game.cpu.bucket == 10000) {
-    Game.cpu?.generatePixel();
-  }
+  clearMemory();
+  if (generatePixels()) return;
 
   for (const room of game.getMyRooms()) {
     spawnCreepsFor(room);
